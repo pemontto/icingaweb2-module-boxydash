@@ -15,22 +15,24 @@ use Icinga\Module\Monitoring\Object\Host;
 <div class="content">
 
     <h1>Boxy Dashboard</h1>
+    <h4>Host: <span id="boxy_host"></span></h4>
+    <h4>Service: <span id="boxy_svc"></span></h4>
     <? if ($this->showlegend){ ?>
     <div class="boxy_legend">
         <span class="boxy_sublegend">
             <span class="legendtext">&#10004; = Acknowledged</span>
-            <span class="legendtext">&#8986; = In Downtime</span>
+            <span class="legendtext">&#9201; = In Downtime</span>
             <span class="legendtext">&#8632; = Host Issue Acknowledged</span>
         </span>
         <span class="boxy_sublegend">
-            <span class="legendtext">Status:</span>
+            <h4 class="legendtext">Status:</h4>
             <span class="boxy_legend_box ok" >ok</span>
             <span class="boxy_legend_box warning" >warning</span>
             <span class="boxy_legend_box critical" >critical</span>
             <span class="boxy_legend_box unknown" >unknown</span>
         </span>
         <span class="boxy_sublegend">
-            <span class="legendtext" >Acknowledged:</span>
+            <h4 class="legendtext" >Acknowledged:</h4>
             <span class="boxy_legend_box warning-ack" >warning</span>
             <span class="boxy_legend_box critical-ack" >critical</span>
             <span class="boxy_legend_box unknown-ack" >unknown</span>
@@ -39,9 +41,10 @@ use Icinga\Module\Monitoring\Object\Host;
     <? } ?>
 <h2>Host Info</h2>
 <?
+$size=$this->boxsize;
+$font_size=number_format($size * 0.65, 0);
 foreach ($this->hosts as $host){
     $title = htmlspecialchars($host->{'host_display_name'});
-    $size=$this->boxsize;
     $content="&nbsp;";
     $returncode=$host->{'host_state_text'};
     if ($host->{'host_acknowledged'}==1 ){
@@ -49,7 +52,7 @@ foreach ($this->hosts as $host){
         $content= "&#10004;";
         $title.=" (Acknowledged)";
     }?>
-    <a href='<?= $this->path_prefix ?>/monitoring/host/show?host=<?=$host->{'host_name'}?>' class='boxy_box state <?=$returncode?>' style='width:<?=$size?>px; height:<?=$size?>px; font-size:<?=$size?>px;' title="<?=$title?>"><?=$content?></a>
+    <a href='<?= $this->path_prefix ?>/monitoring/host/show?host=<?=$host->{'host_name'}?>' class='boxy_box host state <?=$returncode?>' style='width:<?=$size?>px; height:<?=$size?>px; font-size:<?=$font_size?>px;' title="<?=$title?>"><?=$content?></a>
 <? } ?>
 
 <br clear="all"/>
@@ -59,12 +62,11 @@ foreach ($this->hosts as $host){
     $service->{'service_hard_state'} = ($service->{'service_hard_state'}) ? "hard" : "soft";
     $title = $service->{'host_display_name'}.": ".$service->{'service_description'};
     #."(".$service->{'current_check_attempt'} .",".$service->{'max_check_attempts'} .")(". $service->{'service_hard_state'}.")+acked:".$service->{'service_acknowledged'} ;
-    $size=$this->boxsize;
     $content="&nbsp;";
     $returncode=$service->{'service_state_text'};
     if ($service->{'service_in_downtime'}==1 or $service->{'host_in_downtime'}==1 ){
         $returncode.="-downtime";
-        $content= "&#8986;";
+        $content= "&#9201;";
         $title.=" (Scheduled Maintenance)";
     }elseif ($service->{'service_acknowledged'}==1 ){
         $returncode.="-ack";
@@ -76,7 +78,7 @@ foreach ($this->hosts as $host){
         $title.=" (Host Issue Acknowledged)";
     }
     $title=htmlspecialchars($title."\n ".$service->{'service_output'});?>
-    <a href='<?= $this->path_prefix ?>/monitoring/service/show?host=<?=$service->{'host_name'}?>&service=<?=$service->{'service_description'}?>' class='boxy_box state <?=$returncode?>' style='width:<?=$size?>px; height:<?=$size?>px; font-size:<?=$size?>px;' title="<?=$title?>"><?=$content?></a>
+    <a href='<?= $this->path_prefix ?>/monitoring/service/show?host=<?=$service->{'host_name'}?>&service=<?=$service->{'service_description'}?>' class='boxy_box service state <?=$returncode?>' style='width:<?=$size?>px; height:<?=$size?>px; font-size:<?=$font_size?>px;' title="<?=$title?>"><?=$content?></a>
 
 <? } ?>
 <br clear=all>
