@@ -26,7 +26,7 @@ class BoxyDash_IndexController extends Controller
     protected $default_boxsize = 20;
     protected $default_refresh = 10;
     protected $default_showlegend = true;
-    protected $default_path_prefix = '';
+    protected $default_path_prefix = '/icingaweb2';
 
     public function indexAction()
     {
@@ -266,4 +266,3 @@ class BoxyDash_IndexController extends Controller
     }
 */
 }
-
